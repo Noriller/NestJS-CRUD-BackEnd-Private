@@ -1,0 +1,8 @@
+﻿{
+  "type": "mongodb",
+  "host": "mongodb+srv://BrunoNoriller:19892000@firstcluster.djrqp.gcp.mongodb.net/NestJS-CRUD?retryWrites=true&w=majority",
+  "useNewUrlParser": true,
+  "synchronize": true,
+  "logging": true,
+  "entities": ["src/entities/*.*"]
+}
