@@ -1,6 +1,6 @@
 ﻿import { User } from '../entities/User.schema';
 
-export interface IUserRepository {
+export interface IUserService {
 
   saveUser(user: User): Promise<User>;
 
