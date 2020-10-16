@@ -1,9 +1,8 @@
-import { Body, Controller, Delete, Get, Injectable, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Res, UseFilters } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './entities/User';
 
 @Controller('user')
-@Injectable()
 export class UserController {
 
   constructor(
@@ -31,7 +30,7 @@ export class UserController {
   }
 
   @Delete()
-  async deleteUser(@Body('email') email: string): Promise<void> {
+  async deleteUser(@Body('email') email: string): Promise<User> {
     return this.userService.deleteUser(email);
   }
 

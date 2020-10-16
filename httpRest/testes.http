@@ -40,6 +40,6 @@ DELETE http://localhost:3333/user
 content-type: application/json
 
 {
-    "email": "AnotherEmail@email.com",
+    "email": "AnotherEmail@email.com"
 }
 

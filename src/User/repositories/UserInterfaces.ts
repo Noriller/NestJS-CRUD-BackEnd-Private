@@ -11,10 +11,10 @@ export interface IUserServiceImplementation extends IUserSharedServices {
   findUserById(id: string): Promise<User>;
   updateUserById(user: User): Promise<User>;
 
-  deleteUserById(id: string): Promise<void>;
+  deleteUserById(id: string): Promise<User>;
 }
 
 export interface IUserServiceAbstraction extends IUserSharedServices {
   updateUser(originalEmail: string, newUserInfo: User): Promise<User>;
-  deleteUser(email: string): Promise<void>;
+  deleteUser(email: string): Promise<User>;
 }

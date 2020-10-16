@@ -1,4 +1,5 @@
-﻿import { Injectable } from '@nestjs/common';
+﻿import { Injectable, NotFoundException, HttpException, HttpStatus, BadRequestException, ServiceUnavailableException } from '@nestjs/common';
+import { throwError } from 'rxjs';
 import { User } from './entities/User';
 import { UserDTO } from './entities/User.dto';
 import { MongoUserRepository } from './repositories/implementation/MongoUserRepository';
@@ -14,53 +15,83 @@ export class UserService implements IUserServiceAbstraction {
   ) { }
 
   async saveUser(user: UserDTO): Promise<User> {
-    if (user.id || (user.email && this.findUserByEmail(user.email)))
-      throw new Error(`User already exists.`);
+    const tryToFindUser = await this.repository.findUserByEmail(user.email);
+
+    if (user.id || tryToFindUser)
+      throw new BadRequestException(`User already exists. Can't save.`);
 
     user.password = await generateHashPassword(user.password);
 
     const userToSave = new User(user);
 
-    return await this.repository.saveUser(userToSave);
+    const savedUser = await this.repository.saveUser(userToSave);
+
+    if (!savedUser)
+      throw new ServiceUnavailableException(`Failed to save user.`);
+
+    return savedUser;
+
   }
 
   async findUserByEmail(email: string): Promise<User> {
     if (!email)
-      throw new Error("Email cannot be empty.");
+      throw new BadRequestException("Email cannot be empty.");
 
-    return await this.repository.findUserByEmail(email);
+    const userFound = await this.repository.findUserByEmail(email);
+
+    if (!userFound)
+      throw new NotFoundException('User not found.');
+
+    return userFound;
   }
 
   async findAllUsers(): Promise<User[]> {
-    return await this.repository.findAllUsers();
+    const usersFound = await this.repository.findAllUsers();
+
+    if (!usersFound)
+      return [];
+
+    return usersFound;
   }
 
   async updateUser(originalEmail: string, newUserInfo: UserDTO): Promise<User> {
     if (!originalEmail)
-      throw new Error("Must provide original email.");
+      throw new BadRequestException("Must provide original email.");
 
     if (!newUserInfo.id) {
       const userFound = await this.findUserByEmail(originalEmail);
       if (!userFound.id)
-        throw new Error(`User couldn't be found.`);
+        throw new BadRequestException(`User couldn't be found.`);
 
       newUserInfo.id = userFound.id;
     }
 
+    newUserInfo.password = await generateHashPassword(newUserInfo.password);
+
     const userToUpdate = new User(newUserInfo);
 
-    return await this.repository.updateUserById(userToUpdate);
+    const userUpdated = await this.repository.updateUserById(userToUpdate);
+
+    if (!userUpdated)
+      throw new ServiceUnavailableException('Server Error while saving data.');
+
+    return userUpdated;
   }
 
-  async deleteUser(email: string): Promise<void> {
+  async deleteUser(email: string): Promise<User> {
     if (!email)
-      throw new Error("Email cannot be empty.");
+      throw new BadRequestException("Email cannot be empty.");
 
     const userFound = await this.repository.findUserByEmail(email);
     if (!userFound)
-      throw new Error(`User couldn't be found.`);
+      throw new BadRequestException(`User couldn't be found.`);
 
-    return await this.repository.deleteUserById(userFound.id);
+    const userDeleted = await this.repository.deleteUserById(userFound.id);
+
+    if (!userDeleted)
+      throw new ServiceUnavailableException('User could not be deleted.');
+
+    return userDeleted;
   }
 
 }

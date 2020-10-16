@@ -1,28 +1,34 @@
-﻿import { v4 as uuidv4 } from 'uuid';
+﻿import { BadRequestException } from '@nestjs/common';
+import { v4 as uuidv4 } from 'uuid';
+import { generateHashPassword } from '../utils/utils';
+import { UserDTO } from './User.dto';
 
 export class User {
 
-  public readonly id: string;
+  public id: string;
   public name: string;
   public email: string;
   public password: string;
 
-  constructor(props: Omit<User, 'id'>, id?: string) {
+  constructor(user: UserDTO) {
 
-    if (!props.email)
-      throw new Error('Email is required.');
+    if (!user.email)
+      throw new BadRequestException('Email is required.');
 
-    if (!props.name)
-      throw new Error('Name is required.');
+    if (!user.name)
+      throw new BadRequestException('Name is required.');
 
-    if (!props.password)
-      throw new Error('Password is required.');
+    if (!user.password)
+      throw new BadRequestException('Password is required.');
 
-    Object.assign(this, props);
+    Object.assign(this, user);
 
-    if (!id) {
+    if (!user.id) {
       this.id = uuidv4();
+    } else {
+      this.id = user.id;
     }
+
   }
 
 }
