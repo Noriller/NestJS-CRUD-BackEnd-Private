@@ -1,33 +1,23 @@
-import { Body, Controller, Delete, Get, Inject, Injectable, Param, Post, Put } from '@nestjs/common';
-import { User } from './entities/User.schema';
-import { MongoUserService } from './repositories/implementation/MongoUserService';
-import { IUserService } from './repositories/IUserService';
+import { Body, Controller, Delete, Get, Injectable, Param, Post, Put } from '@nestjs/common';
+import { UserService } from './user.service';
+import { User } from './entities/User';
 
 @Controller('user')
 @Injectable()
 export class UserController {
 
   constructor(
-    @Inject(MongoUserService)
-    private readonly userService: IUserService
+    private readonly userService: UserService
   ) { }
 
   @Get()
-  async getAllUsers(@Param() params: string[]): Promise<User[]> {
-    console.log(params);
+  async getAllUsers(): Promise<User[]> {
     return this.userService.findAllUsers();
   }
 
   @Get('email/:email')
   async getUserByEmail(@Param('email') email: string): Promise<User> {
-    console.log(email);
     return this.userService.findUserByEmail(email);
-  }
-
-  @Get('id/:id')
-  async getUserById(@Param('id') id: string): Promise<User> {
-    console.log(id);
-    return this.userService.findUserById(id);
   }
 
   @Post()

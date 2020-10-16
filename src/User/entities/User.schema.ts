@@ -1,11 +1,10 @@
-﻿import { v4 as uuidv4 } from 'uuid';
-import { Document } from 'mongoose';
+﻿import { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema({ collection: 'user', _id: false, id: false })
-export class User extends Document {
+export class UserDocument extends Document {
 
-  @Prop({ default: () => uuidv4() })
+  @Prop({ required: true })
   _id: string;
 
   @Prop({ required: true })
@@ -19,4 +18,4 @@ export class User extends Document {
 
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+export const UserSchema = SchemaFactory.createForClass(UserDocument);
