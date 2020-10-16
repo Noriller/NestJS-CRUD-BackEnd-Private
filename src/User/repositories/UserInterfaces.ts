@@ -5,15 +5,16 @@ interface IUserSharedServices {
 
   findAllUsers(): Promise<User[]>;
   findUserByEmail(email: string): Promise<User>;
-  findUserById(id: string): Promise<User>;
-
-  deleteUser(id: string): Promise<void>;
 }
 
 export interface IUserServiceImplementation extends IUserSharedServices {
+  findUserById(id: string): Promise<User>;
   updateUserById(user: User): Promise<User>;
+
+  deleteUserById(id: string): Promise<void>;
 }
 
 export interface IUserServiceAbstraction extends IUserSharedServices {
-  updateUser(user: User): Promise<User>;
+  updateUser(originalEmail: string, newUserInfo: User): Promise<User>;
+  deleteUser(email: string): Promise<void>;
 }

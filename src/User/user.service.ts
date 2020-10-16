@@ -31,39 +31,36 @@ export class UserService implements IUserServiceAbstraction {
     return await this.repository.findUserByEmail(email);
   }
 
-  async findUserById(id: string): Promise<User> {
-    if (!id)
-      throw new Error("ID cannot be empty.");
-
-    return await this.repository.findUserById(id);
-  }
-
   async findAllUsers(): Promise<User[]> {
     return await this.repository.findAllUsers();
   }
 
-  async updateUser(user: UserDTO): Promise<User> {
-    if (!user.email)
-      throw new Error("Email cannot be empty.");
-    if (!user.id) {
-      const userFoundById = await this.findUserByEmail(user.email);
-      if (!userFoundById.id)
+  async updateUser(originalEmail: string, newUserInfo: UserDTO): Promise<User> {
+    if (!originalEmail)
+      throw new Error("Must provide original email.");
+
+    if (!newUserInfo.id) {
+      const userFound = await this.findUserByEmail(originalEmail);
+      if (!userFound.id)
         throw new Error(`User couldn't be found.`);
-      user.id = userFoundById.id;
+
+      newUserInfo.id = userFound.id;
     }
 
-    const userToUpdate = new User(user);
+    const userToUpdate = new User(newUserInfo);
 
     return await this.repository.updateUserById(userToUpdate);
   }
 
-  async deleteUser(id: string): Promise<void> {
-    if (!id)
-      throw new Error("ID cannot be empty.");
-    if (!this.findUserById(id))
+  async deleteUser(email: string): Promise<void> {
+    if (!email)
+      throw new Error("Email cannot be empty.");
+
+    const userFound = await this.repository.findUserByEmail(email);
+    if (!userFound)
       throw new Error(`User couldn't be found.`);
 
-    return await this.repository.deleteUser(id);
+    return await this.repository.deleteUserById(userFound.id);
   }
 
 }

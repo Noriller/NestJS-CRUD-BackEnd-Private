@@ -26,13 +26,13 @@ export class UserController {
   }
 
   @Put()
-  async updateUser(@Body() user: User): Promise<User> {
-    return this.userService.updateUser(user);
+  async updateUser(@Body('originalEmail') originalEmail: string, @Body('user') newUserInfo: User): Promise<User> {
+    return this.userService.updateUser(originalEmail, newUserInfo);
   }
 
   @Delete()
-  async deleteUser(@Body('id') id: string): Promise<void> {
-    return this.userService.deleteUser(id);
+  async deleteUser(@Body('email') email: string): Promise<void> {
+    return this.userService.deleteUser(email);
   }
 
 }

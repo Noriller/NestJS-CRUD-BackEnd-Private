@@ -46,9 +46,9 @@ describe('Mongo User Repository', () => {
     expect(service).toBeDefined();
   });
 
-  // it('should find users', async () => {
-  //   expect(await service.findAllUsers()).toBe(mockMongoResults);
-  // });
+  it('should find users', async () => {
+    expect(await service.findAllUsers()).toBe(mockMongoResults);
+  });
 
 
 });

@@ -34,7 +34,7 @@ export class MongoUserRepository implements IUserServiceImplementation {
     return await this.service.findOneAndUpdate({ '_id': user.id }, mongoUser, { new: true }).exec();
   }
 
-  async deleteUser(id: string): Promise<void> {
+  async deleteUserById(id: string): Promise<void> {
     await this.service.findOneAndDelete({ '_id': id }).exec();
   }
 

@@ -10,10 +10,6 @@ http://localhost:3333/user
 http://localhost:3333/user/email/email@email.com
 
 ###
-// Find by id
-http://localhost:3333/user/id/1
-
-###
 // Create a new user
 POST http://localhost:3333/user HTTP/1.1
 content-type: application/json
@@ -30,10 +26,12 @@ PUT http://localhost:3333/user HTTP/1.1
 content-type: application/json
 
 {
-    "id": "1",
-    "name": "Not a Sample",
-    "email": "AnotherEmail@email.com",
-    "password": "UwU"
+    "originalEmail": "email@email.com",
+    "user": { 
+        "name": "Not a Sample",
+        "email": "AnotherEmail@email.com",
+        "password": "UwU"
+    }
 }
 
 ###
@@ -42,6 +40,6 @@ DELETE http://localhost:3333/user
 content-type: application/json
 
 {
-    "id": "1"
+    "email": "AnotherEmail@email.com",
 }
 
