@@ -48,7 +48,7 @@ export class UserService implements IUserServiceAbstraction {
   async findAllUsers(): Promise<User[]> {
     const usersFound = await this.repository.findAllUsers();
 
-    if (!usersFound)
+    if (usersFound.length == 0)
       return [];
 
     return usersFound;
@@ -56,13 +56,10 @@ export class UserService implements IUserServiceAbstraction {
 
   async updateUser(originalEmail: string, newUserInfo: UserDTO): Promise<User> {
     if (!originalEmail)
-      throw new BadRequestException("Must provide original email.");
+      throw new BadRequestException('Must provide original email.');
 
     if (!newUserInfo.id) {
       const userFound = await this.findUserByEmail(originalEmail);
-      if (!userFound.id)
-        throw new BadRequestException(`User couldn't be found.`);
-
       newUserInfo.id = userFound.id;
     }
 
@@ -83,8 +80,6 @@ export class UserService implements IUserServiceAbstraction {
       throw new BadRequestException("Email cannot be empty.");
 
     const userFound = await this.repository.findUserByEmail(email);
-    if (!userFound)
-      throw new BadRequestException(`User couldn't be found.`);
 
     const userDeleted = await this.repository.deleteUserById(userFound.id);
 

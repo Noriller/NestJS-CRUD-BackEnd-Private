@@ -1,6 +1,5 @@
 ﻿import { BadRequestException } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
-import { generateHashPassword } from '../utils/utils';
 import { UserDTO } from './User.dto';
 
 export class User {
