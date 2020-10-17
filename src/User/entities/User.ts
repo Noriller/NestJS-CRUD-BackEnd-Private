@@ -17,9 +17,6 @@ export class User {
     if (!user.name)
       throw new BadRequestException('Name is required.');
 
-    if (!user.password)
-      throw new BadRequestException('Password is required.');
-
     Object.assign(this, user);
 
     if (!user.id) {

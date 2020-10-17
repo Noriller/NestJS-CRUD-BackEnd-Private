@@ -18,6 +18,15 @@ describe('Password hashing', () => {
     expect(comparacao).toBeFalsy();
   });
 
+  it('should throw without password', async () => {
+    try {
+      const test = await generateHashPassword('');
+      expect(test).toThrow();
+    } catch (err) {
+      expect(err.message).toBe('Password is required.');
+    }
+  });
+
 });
 
 describe('Password decrypting', () => {
@@ -43,6 +52,23 @@ describe('Password decrypting', () => {
     expect(comparacao).toBe(false);
   });
 
+  it('should throw without password', async () => {
+    try {
+      const test = await compareHashPassword('', hashedFakePassword);
+      expect(test).toThrow();
+    } catch (err) {
+      expect(err.message).toBe('Password is required.');
+    }
+  });
+
+  it('should throw without hashed password', async () => {
+    try {
+      const test = await compareHashPassword(password, '');
+      expect(test).toThrow();
+    } catch (err) {
+      expect(err.message).toBe('Hashed Password is required.');
+    }
+  });
 });
 
 

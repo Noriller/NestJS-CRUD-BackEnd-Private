@@ -117,6 +117,7 @@ describe('User Service', () => {
     aNewUser.name = '';
     try {
       const userSaved = await service.saveUser(aNewUser);
+      expect(userSaved).toThrow();
     } catch (error) {
       expect(error.message).toBe(`Name is required.`);
     }
@@ -132,6 +133,7 @@ describe('User Service', () => {
     aNewUser.email = '';
     try {
       const userSaved = await service.saveUser(aNewUser);
+      expect(userSaved).toThrow();
     } catch (error) {
       expect(error.message).toBe(`Email is required.`);
     }
@@ -147,6 +149,7 @@ describe('User Service', () => {
     aNewUser.password = '';
     try {
       const userSaved = await service.saveUser(aNewUser);
+      expect(userSaved).toThrow();
     } catch (error) {
       expect(error.message).toBe(`Password is required.`);
     }
@@ -160,6 +163,7 @@ describe('User Service', () => {
     const aNewUser: UserDTO = { ...aNewUserTemplate };
     try {
       const userSaved = await service.saveUser(aNewUser);
+      expect(userSaved).toThrow();
     } catch (error) {
       expect(error.message).toBe(`Failed to save user.`);
     }
@@ -199,7 +203,8 @@ describe('User Service', () => {
 
     const aNewUserButSameEmail: UserDTO = { ...aNewUserButSameEmailTemplate };
     try {
-      await service.saveUser(aNewUserButSameEmail);
+      const userSaved = await service.saveUser(aNewUserButSameEmail);
+      expect(userSaved).toThrow();
     } catch (error) {
       expect(error.message).toBe(`User already exists. Can't save.`);
     }
@@ -221,7 +226,8 @@ describe('User Service', () => {
       mockMongoResults.find((elem) => elem.email === email));
 
     try {
-      await service.findUserByEmail(null);
+      const userFound = await service.findUserByEmail(null);
+      expect(userFound).toThrow();
     } catch (error) {
       expect(error.message).toBe(`Email cannot be empty.`);
     }
@@ -232,7 +238,8 @@ describe('User Service', () => {
       mockMongoResults.find((elem) => elem.email === email));
 
     try {
-      await service.findUserByEmail('notInDatabase@email.com');
+      const userFound = await service.findUserByEmail('notInDatabase@email.com');
+      expect(userFound).toThrow();
     } catch (error) {
       expect(error.message).toBe(`User not found.`);
     }
@@ -280,6 +287,7 @@ describe('User Service', () => {
     const anUpdatedVersionOfUser = { ...anUpdatedVersionOfUserTemplate };
     try {
       const userUpdated = await service.updateUser('', anUpdatedVersionOfUser);
+      expect(userUpdated).toThrow();
     } catch (error) {
       expect(error.message).toBe('Must provide original email.');
     }
@@ -295,6 +303,7 @@ describe('User Service', () => {
     const anUpdatedVersionOfUser = { ...anUpdatedVersionOfUserTemplate };
     try {
       const userUpdated = await service.updateUser(mockMongoResults[0].email, anUpdatedVersionOfUser);
+      expect(userUpdated).toThrow();
     } catch (error) {
       expect(error.message).toBe('Server Error while saving data.');
     }
@@ -362,6 +371,7 @@ describe('User Service', () => {
     userToDelete.email = '';
     try {
       const deletedUser = await service.deleteUser(userToDelete.email);
+      expect(deletedUser).toThrow();
     } catch (error) {
       expect(error.message).toBe('Email cannot be empty.');
     }
@@ -377,6 +387,7 @@ describe('User Service', () => {
     const userToDelete: UserDTO = { ...mockMongoResults[1] };
     try {
       const deletedUser = await service.deleteUser(userToDelete.email);
+      expect(deletedUser).toThrow();
     } catch (error) {
       expect(error.message).toBe('User could not be deleted.');
     }
