@@ -3,10 +3,12 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb+srv://testes:testes@firstcluster.djrqp.gcp.mongodb.net/NestJS-CRUD?retryWrites=true&w=majority', { useFindAndModify: false }),
+    ConfigModule.forRoot( { isGlobal: true } ),
+    MongooseModule.forRoot( process.env.MONGO_HOST, { useFindAndModify: false } ),
     UserModule,
   ],
   controllers: [AppController],

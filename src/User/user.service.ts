@@ -1,5 +1,4 @@
-﻿import { Injectable, NotFoundException, HttpException, HttpStatus, BadRequestException, ServiceUnavailableException } from '@nestjs/common';
-import { throwError } from 'rxjs';
+﻿import { BadRequestException, Injectable, NotFoundException, ServiceUnavailableException } from '@nestjs/common';
 import { User } from './entities/User';
 import { UserDTO } from './entities/User.dto';
 import { MongoUserRepository } from './repositories/implementation/MongoUserRepository';
