@@ -13,8 +13,7 @@ describe('Mongo User Service', () => {
       providers: [
         MongoUserRepository,
         {
-          provide: getModelToken('User'),
-          // notice that only the functions we call from the model are mocked
+          provide: getModelToken( 'User' ),
           useValue: mockUseValue,
         },
       ],
@@ -56,14 +55,13 @@ describe('Mongo User Service', () => {
     expect(foundMock).toEqual(mockUserFormat);
   });
 
-  // it('should save new user', async () => {
-  //   jest.spyOn(model, 'save').mockReturnValue({
-  //     save: jest.fn().mockResolvedValueOnce(mockMongoFormat)
-  //   } as any);
-
-  //   const foundMock = await service.saveUser(mockUserFormat);
-  //   expect(foundMock).toEqual(mockUserFormat);
-  // });
+  it( 'should save new user', async () => {
+    jest.spyOn( model, 'create' ).mockImplementation(
+      jest.fn().mockResolvedValueOnce( mockMongoFormat )
+    );
+    const foundMock = await service.saveUser( mockUserFormat );
+    expect( foundMock ).toEqual( mockUserFormat );
+  } );
 
   it('should find one by id and update', async () => {
     jest.spyOn(model, 'findOneAndUpdate').mockReturnValue(jestMockResolvedValue_Exec(mockMongoFormat));
@@ -75,8 +73,8 @@ describe('Mongo User Service', () => {
     jest.spyOn(model, 'findOneAndDelete').mockReturnValue(jestMockResolvedValue_Exec(mockMongoFormat));
     const foundMock = await service.deleteUserById(mockUserFormat.id);
     expect(foundMock).toEqual(mockUserFormat);
-  });
-
+  } );
+  
 });
 
 const mockUseValue = {
@@ -97,6 +95,11 @@ const mockUseValue = {
 function jestMockResolvedValue_Exec(valueToReturn) {
   return {
     exec: jest.fn().mockResolvedValueOnce(valueToReturn),
+  } as any;
+}
+function jestMockResolvedValue_Create ( valueToReturn ) {
+  return {
+    create: jest.fn().mockResolvedValueOnce( valueToReturn ),
   } as any;
 }
 

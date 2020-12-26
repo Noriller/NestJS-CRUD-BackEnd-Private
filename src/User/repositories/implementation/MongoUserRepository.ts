@@ -10,9 +10,9 @@ export class MongoUserRepository implements IUserServiceImplementation {
     private readonly service: typeof Model
   ) { }
 
-  async saveUser(user: User): Promise<User> {
+  async saveUser ( user: User ): Promise<User> {
     const mongoUser = this.getMongoUser(user);
-    const savedMongoUser = await new this.service(mongoUser).save();
+    const savedMongoUser = await this.service.create( mongoUser );
     return this.toUserFormat(savedMongoUser);
   }
 
@@ -62,13 +62,14 @@ export class MongoUserRepository implements IUserServiceImplementation {
   private toUserFormat(mongoUser: MongoUser) {
     if (!mongoUser)
       return null;
-
+    
     const formattedUser = {
       id: mongoUser._id,
       name: mongoUser.name,
       email: mongoUser.email,
       password: mongoUser.password,
     };
+
     return new User(formattedUser);
   }
 
