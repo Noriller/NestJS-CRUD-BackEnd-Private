@@ -7,7 +7,7 @@ export async function generateHashPassword(password: string) {
   if (!password)
     throw new BadRequestException('Password is required.');
 
-  const hashedPassword = await bcrypt.hash(password, saltRounds);
+  const hashedPassword: string = await bcrypt.hash( password, saltRounds );
   return hashedPassword;
 }
 
@@ -17,6 +17,6 @@ export async function compareHashPassword(password: string, hashedPassword: stri
   if (!hashedPassword)
     throw new BadRequestException('Hashed Password is required.');
 
-  const compare = await bcrypt.compare(password, hashedPassword);
+  const compare: boolean = await bcrypt.compare( password, hashedPassword );
   return compare;
 }

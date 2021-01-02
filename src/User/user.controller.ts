@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Res, UseFilters } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './entities/User';
+import { UserDTO } from './entities/User.dto';
 
 @Controller('user')
 export class UserController {
@@ -20,12 +21,15 @@ export class UserController {
   }
 
   @Post()
-  async saveUser(@Body() user: User): Promise<User> {
+  async saveUser ( @Body() user: UserDTO ): Promise<User> {
     return this.userService.saveUser(user);
   }
 
   @Put()
-  async updateUser(@Body('originalEmail') originalEmail: string, @Body('user') newUserInfo: User): Promise<User> {
+  async updateUser (
+    @Body( 'originalEmail' ) originalEmail: string,
+    @Body( 'user' ) newUserInfo: UserDTO )
+    : Promise<User> {
     return this.userService.updateUser(originalEmail, newUserInfo);
   }
 

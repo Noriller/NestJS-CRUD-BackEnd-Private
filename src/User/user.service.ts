@@ -3,7 +3,6 @@ import { User } from './entities/User';
 import { UserDTO } from './entities/User.dto';
 import { MongoUserRepository } from './repositories/implementation/MongoUserRepository';
 import { IUserServiceAbstraction } from './repositories/UserInterfaces';
-import { generateHashPassword } from './utils/utils';
 
 
 @Injectable()
@@ -13,15 +12,13 @@ export class UserService implements IUserServiceAbstraction {
     private readonly repository: MongoUserRepository
   ) { }
 
-  async saveUser(user: UserDTO): Promise<User> {
-    const tryToFindUser = await this.repository.findUserByEmail(user.email);
+  async saveUser ( user: UserDTO ): Promise<User> {
+    const tryToFindUser = await this.repository.findUserByEmail( user._email );
 
-    if (user.id || tryToFindUser)
+    if ( user._id || tryToFindUser )
       throw new BadRequestException(`User already exists. Can't save.`);
 
-    user.password = await generateHashPassword(user.password);
-
-    const userToSave = new User(user);
+    const userToSave = await new User( user ).buildUser();
 
     const savedUser = await this.repository.saveUser(userToSave);
 
@@ -57,14 +54,12 @@ export class UserService implements IUserServiceAbstraction {
     if (!originalEmail)
       throw new BadRequestException('Must provide original email.');
 
-    if (!newUserInfo.id) {
+    if ( !newUserInfo._id ) {
       const userFound = await this.findUserByEmail(originalEmail);
-      newUserInfo.id = userFound.id;
+      newUserInfo._id = userFound.id();
     }
 
-    newUserInfo.password = await generateHashPassword(newUserInfo.password);
-
-    const userToUpdate = new User(newUserInfo);
+    const userToUpdate = await new User( newUserInfo ).buildUser();
 
     const userUpdated = await this.repository.updateUserById(userToUpdate);
 
@@ -78,9 +73,12 @@ export class UserService implements IUserServiceAbstraction {
     if (!email)
       throw new BadRequestException("Email cannot be empty.");
 
-    const userFound = await this.repository.findUserByEmail(email);
+    const userFound = await this.repository.findUserByEmail( email );
 
-    const userDeleted = await this.repository.deleteUserById(userFound.id);
+    if ( !userFound )
+      throw new NotFoundException( 'User not found.' );
+
+    const userDeleted = await this.repository.deleteUserById( userFound.id() );
 
     if (!userDeleted)
       throw new ServiceUnavailableException('User could not be deleted.');
