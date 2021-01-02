@@ -52,8 +52,14 @@ describe( 'Mongo User Service', () => {
 
   it( 'should find one by email', async () => {
     jest.spyOn( model, 'findOne' ).mockReturnValue( jestMockResolvedValue_Exec( mockMongoFormat ) );
-    const foundMock = await service.findUserByEmail( mockUserFormat.email() );
+    const foundMock = await service.findUserByEmail( mockUserFormat.getEmail() );
     expect( foundMock ).toEqual( mockUserFormat );
+  } );
+
+  it( 'should return null trying to find by email that does not exist', async () => {
+    jest.spyOn( model, 'findOne' ).mockReturnValue( jestMockResolvedValue_Exec( null ) );
+    const foundMock = await service.findUserByEmail( mockUserFormat.getEmail() );
+    expect( foundMock ).toEqual( null );
   } );
 
   it( 'should save new user', async () => {
@@ -114,34 +120,34 @@ const mockMongoFormat = new User( {
 
 const mockArrayMongo = [ {
   "_id": "6fc56932-a379-4457-9082-cc4966b7a1f3",
-  "_name": "FirstFake",
-  "_email": "fake1@email.com",
-  "_password": "123123",
+  "name": "FirstFake",
+  "email": "fake1@email.com",
+  "password": "123123",
 }, {
   "_id": "1718fc5c-48b6-4fd7-84ff-bc0fb639a178",
-    "_name": "SecondFake",
-    "_email": "fake2@email.com",
-    "_password": "123123",
+    "name": "SecondFake",
+    "email": "fake2@email.com",
+    "password": "123123",
 }, {
   "_id": "19ef970c-66df-4282-9f53-3a0459093126",
-    "_name": "LastFake",
-    "_email": "fake3@email.com",
-    "_password": "123123",
-  } ];
+    "name": "LastFake",
+    "email": "fake3@email.com",
+    "password": "123123",
+} ];
 
 const mockArrayUser = [ {
   "_id": "6fc56932-a379-4457-9082-cc4966b7a1f3",
-  "_name": "FirstFake",
-  "_email": "fake1@email.com",
-  "_password": "123123",
+  "name": "FirstFake",
+  "email": "fake1@email.com",
+  "password": "123123",
 }, {
-    "_id": "1718fc5c-48b6-4fd7-84ff-bc0fb639a178",
-    "_name": "SecondFake",
-    "_email": "fake2@email.com",
-    "_password": "123123",
+  "_id": "1718fc5c-48b6-4fd7-84ff-bc0fb639a178",
+    "name": "SecondFake",
+    "email": "fake2@email.com",
+    "password": "123123",
 }, {
-    "_id": "19ef970c-66df-4282-9f53-3a0459093126",
-    "_name": "LastFake",
-    "_email": "fake3@email.com",
-    "_password": "123123",
-  } ];
+  "_id": "19ef970c-66df-4282-9f53-3a0459093126",
+    "name": "LastFake",
+    "email": "fake3@email.com",
+    "password": "123123",
+} ];

@@ -161,8 +161,8 @@ describe( 'User Service', () => {
     const aNewUser: UserDTO = { ...aNewUserTemplate };
     const userSaved = await service.saveUser( aNewUser );
 
-    expect( userSaved.email() ).toBe( aNewUserTemplate.email );
-    expect( userSaved.name() ).toBe( aNewUserTemplate.name );
+    expect( userSaved.getEmail() ).toBe( aNewUserTemplate.email );
+    expect( userSaved.getName() ).toBe( aNewUserTemplate.name );
   } );
   
   it( 'should hash the new user password', async () => {
@@ -170,7 +170,7 @@ describe( 'User Service', () => {
 
     const aNewUser: UserDTO = { ...aNewUserTemplate };
     const userSaved = await service.saveUser( aNewUser );
-    expect( userSaved.password() ).not.toBe( aNewUserTemplate.password );
+    expect( userSaved.getPassword() ).not.toBe( aNewUserTemplate.password );
     expect( await userSaved.isCorrectPassword( aNewUser.password ) ).toBeTruthy();
   } );
 
@@ -192,7 +192,7 @@ describe( 'User Service', () => {
 
     const lookupMock: User = mockArrayTemplate[ 0 ];
 
-    const userFound = await service.findUserByEmail( lookupMock.email() );
+    const userFound = await service.findUserByEmail( lookupMock.getEmail() );
     const comparation = JSON.stringify( userFound ) == JSON.stringify( lookupMock );
     expect( comparation ).toBe( true );
   } );
@@ -224,7 +224,7 @@ describe( 'User Service', () => {
     jest.spyOn( repository, 'findUserByEmail' ).mockImplementation( jestMockImplementation_FindUserByEmail( mockMongoResults ) );
 
     const anUpdatedVersionOfUser = { ...anUpdatedVersionOfUserTemplate };
-    const userUpdated = await service.updateUser( mockMongoResults[ 0 ].email(), anUpdatedVersionOfUser );
+    const userUpdated = await service.updateUser( mockMongoResults[ 0 ].getEmail(), anUpdatedVersionOfUser );
     expect( mockMongoResults ).toContain( userUpdated );
   } );
 
@@ -235,7 +235,7 @@ describe( 'User Service', () => {
     const anUpdatedVersionOfUser = { ...anUpdatedVersionOfUserTemplate };
     anUpdatedVersionOfUser._id = mockMongoResults[ 0 ].getId();
 
-    const userUpdated = await service.updateUser( mockMongoResults[ 0 ].email(), anUpdatedVersionOfUser );
+    const userUpdated = await service.updateUser( mockMongoResults[ 0 ].getEmail(), anUpdatedVersionOfUser );
     expect( mockMongoResults ).toContain( userUpdated );
   } );
 
@@ -258,7 +258,7 @@ describe( 'User Service', () => {
 
     const anUpdatedVersionOfUser = { ...anUpdatedVersionOfUserTemplate };
     try {
-      const userUpdated = await service.updateUser( mockMongoResults[ 0 ].email(), anUpdatedVersionOfUser );
+      const userUpdated = await service.updateUser( mockMongoResults[ 0 ].getEmail(), anUpdatedVersionOfUser );
       expect( userUpdated ).toThrow();
     } catch ( error ) {
       expect( error.message ).toBe( 'Server Error while saving data.' );
@@ -270,10 +270,10 @@ describe( 'User Service', () => {
     jest.spyOn( repository, 'findUserByEmail' ).mockImplementation( jestMockImplementation_FindUserByEmail( mockMongoResults ) );
 
     const anUpdatedVersionOfUser = { ...anUpdatedVersionOfUserTemplate };
-    const userUpdated = await service.updateUser( mockMongoResults[ 0 ].email(), anUpdatedVersionOfUser );
+    const userUpdated = await service.updateUser( mockMongoResults[ 0 ].getEmail(), anUpdatedVersionOfUser );
 
-    expect( userUpdated.email() ).toBe( anUpdatedVersionOfUserTemplate.email );
-    expect( userUpdated.name() ).toBe( anUpdatedVersionOfUserTemplate.name );
+    expect( userUpdated.getEmail() ).toBe( anUpdatedVersionOfUserTemplate.email );
+    expect( userUpdated.getName() ).toBe( anUpdatedVersionOfUserTemplate.name );
     expect( userUpdated.getId() ).toBe( "6fc56932-a379-4457-9082-cc4966b7a1f3" );
   } );
 
@@ -282,8 +282,8 @@ describe( 'User Service', () => {
     jest.spyOn( repository, 'findUserByEmail' ).mockImplementation( jestMockImplementation_FindUserByEmail( mockMongoResults ) );
 
     const anUpdatedVersionOfUser = { ...anUpdatedVersionOfUserTemplate };
-    const userUpdated = await service.updateUser( mockMongoResults[ 0 ].email(), anUpdatedVersionOfUser );
-    expect( anUpdatedVersionOfUserTemplate.password ).not.toBe( userUpdated.password );
+    const userUpdated = await service.updateUser( mockMongoResults[ 0 ].getEmail(), anUpdatedVersionOfUser );
+    expect( anUpdatedVersionOfUserTemplate.password ).not.toBe( userUpdated.getPassword() );
     expect( await userUpdated.isCorrectPassword( anUpdatedVersionOfUserTemplate.password ) ).toBeTruthy();
   } );
 
@@ -354,7 +354,7 @@ function jestMockImplementation_DeleteUserById ( mockMongoResults: User[] ): ( i
 }
 
 function jestMockImplementation_FindUserByEmail ( mockMongoResults: User[] ): ( email: string ) => Promise<User> {
-  return async ( email: string ) => mockMongoResults.find( ( elem ) => elem.email() === email );
+  return async ( email: string ) => mockMongoResults.find( ( elem ) => elem.getEmail() === email );
 }
 
 function jestMockImplementation_SaveUser ( mockMongoResults: User[] ): ( user: User ) => Promise<User> {
