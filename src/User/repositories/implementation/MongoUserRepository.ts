@@ -11,32 +11,37 @@ export class MongoUserRepository implements IUserServiceImplementation {
   ) { }
 
   async saveUser ( user: User ): Promise<User> {
-    return await this.service.create( user );
+    const userCreated = await this.service.create( user );
+    return new User( userCreated );
   }
 
   async findUserByEmail ( email: string ): Promise<User> {
-    return await this.service.findOne( { email: email } ).exec();
+    const userFound = await this.service.findOne( { email: email } ).exec();
+    return userFound ? new User( userFound ) : null;
   }
 
   async findUserById ( _id: string ): Promise<User> {
-    return await this.service.findById( _id ).exec();
+    const userFound = await this.service.findById( _id ).exec();
+    return userFound ? new User( userFound ) : null;
   }
 
   async findAllUsers (): Promise<User[]> {
     const mongoArray = await this.service.find().exec();
     const userArray = [];
     mongoArray.forEach(
-      user => userArray.push( user )
+      user => userArray.push( new User( user ) )
     );
 
     return userArray;
   }
 
   async updateUserById ( user: User ): Promise<User> {
-    return await this.service.findOneAndUpdate( { '_id': user.id() }, user, { new: true } ).exec();
+    const userUpdated = await this.service.findOneAndUpdate( { '_id': user.getId() }, user, { new: true } ).exec();
+    return new User( userUpdated );
   }
 
   async deleteUserById ( _id: string ): Promise<User> {
-    return await this.service.findOneAndDelete( { '_id': _id } ).exec();
+    const userDeleted = await this.service.findOneAndDelete( { '_id': _id } ).exec();
+    return new User( userDeleted );
   }
 }

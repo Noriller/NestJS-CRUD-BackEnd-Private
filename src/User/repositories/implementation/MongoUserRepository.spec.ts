@@ -40,13 +40,13 @@ describe( 'Mongo User Service', () => {
 
   it( 'should find one by id', async () => {
     jest.spyOn( model, 'findById' ).mockReturnValue( jestMockResolvedValue_Exec( mockMongoFormat ) );
-    const foundMock = await service.findUserById( mockUserFormat.id() );
+    const foundMock = await service.findUserById( mockUserFormat.getId() );
     expect( foundMock ).toEqual( mockUserFormat );
   } );
 
   it( 'should return null if user is not found', async () => {
     jest.spyOn( model, 'findById' ).mockReturnValue( jestMockResolvedValue_Exec( null ) );
-    const foundMock = await service.findUserById( mockUserFormat.id() );
+    const foundMock = await service.findUserById( mockUserFormat.getId() );
     expect( foundMock ).toEqual( null );
   } );
 
@@ -72,7 +72,7 @@ describe( 'Mongo User Service', () => {
 
   it( 'should find one by id and delete', async () => {
     jest.spyOn( model, 'findOneAndDelete' ).mockReturnValue( jestMockResolvedValue_Exec( mockMongoFormat ) );
-    const foundMock = await service.deleteUserById( mockUserFormat.id() );
+    const foundMock = await service.deleteUserById( mockUserFormat.getId() );
     expect( foundMock ).toEqual( mockUserFormat );
   } );
 
@@ -101,15 +101,15 @@ function jestMockResolvedValue_Exec ( valueToReturn ) {
 
 const mockUserFormat = new User( {
   "_id": "6fc56932-a379-4457-9082-cc4966b7a1f3",
-  "_name": "FirstFake",
-  "_email": "fake1@email.com",
-  "_password": "123123",
+  "name": "FirstFake",
+  "email": "fake1@email.com",
+  "password": "123123",
 } );
 const mockMongoFormat = new User( {
   "_id": "6fc56932-a379-4457-9082-cc4966b7a1f3",
-  "_name": "FirstFake",
-  "_email": "fake1@email.com",
-  "_password": "123123",
+  "name": "FirstFake",
+  "email": "fake1@email.com",
+  "password": "123123",
 } );
 
 const mockArrayMongo = [ {

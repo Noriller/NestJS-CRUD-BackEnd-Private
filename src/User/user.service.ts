@@ -13,7 +13,7 @@ export class UserService implements IUserServiceAbstraction {
   ) { }
 
   async saveUser ( user: UserDTO ): Promise<User> {
-    const tryToFindUser = await this.repository.findUserByEmail( user._email );
+    const tryToFindUser = await this.repository.findUserByEmail( user.email );
 
     if ( user._id || tryToFindUser )
       throw new BadRequestException(`User already exists. Can't save.`);
@@ -55,8 +55,8 @@ export class UserService implements IUserServiceAbstraction {
       throw new BadRequestException('Must provide original email.');
 
     if ( !newUserInfo._id ) {
-      const userFound = await this.findUserByEmail(originalEmail);
-      newUserInfo._id = userFound.id();
+      const userFound = await this.findUserByEmail( originalEmail );
+      newUserInfo._id = userFound.getId();
     }
 
     const userToUpdate = await new User( newUserInfo ).buildUser();
@@ -74,11 +74,11 @@ export class UserService implements IUserServiceAbstraction {
       throw new BadRequestException("Email cannot be empty.");
 
     const userFound = await this.repository.findUserByEmail( email );
-
+    
     if ( !userFound )
       throw new NotFoundException( 'User not found.' );
 
-    const userDeleted = await this.repository.deleteUserById( userFound.id() );
+    const userDeleted = await this.repository.deleteUserById( userFound.getId() );
 
     if (!userDeleted)
       throw new ServiceUnavailableException('User could not be deleted.');

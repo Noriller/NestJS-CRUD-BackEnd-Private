@@ -6,21 +6,24 @@ import { UserDTO } from './User.dto';
 export class User {
 
   private _id: string;
-  private _name: string;
-  private _email: string;
-  private _password: string;
+  private name: string;
+  private email: string;
+  private password: string;
 
   public constructor ( user: UserDTO ) {
-    if ( !user._email )
+    if ( !user.email )
       throw new BadRequestException('Email is required.');
   
-    if ( !user._name )
+    if ( !user.name )
       throw new BadRequestException('Name is required.');
     
-    if ( !user._password )
+    if ( !user.password )
       throw new BadRequestException( 'Password is required.' );
 
-    Object.assign(this, user);
+    this._id = user._id;
+    this.name = user.name;
+    this.email = user.email;
+    this.password = user.password;
   }
 
   public async buildUser () {
@@ -34,27 +37,27 @@ export class User {
   }
 
   private async hashPassword () {
-    this._password = await User.generateHashedPassword( this._password );
+    this.password = await User.generateHashedPassword( this.password );
   }
 
-  public id () {
+  public getId () {
     return this._id;
   }
 
-  public name () {
-    return this._name;
+  public getName () {
+    return this.name;
   }
 
-  public email () {
-    return this._email;
+  public getEmail () {
+    return this.email;
   }
 
-  public password () {
-    return this._password;
+  public getPassword () {
+    return this.password;
   }
 
   public async isCorrectPassword ( password: string ) {
-    return await compareHashPassword( password, this._password )
+    return await compareHashPassword( password, this.password )
   }
 
   public static async generateHashedPassword ( password: string ): Promise<string> {
