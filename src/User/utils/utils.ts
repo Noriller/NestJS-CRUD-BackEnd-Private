@@ -3,7 +3,7 @@ import * as bcrypt from 'bcrypt';
 
 const saltRounds = 10;
 
-export async function generateHashPassword(password: string) {
+export async function generateHashPassword ( password: string ): Promise<string> {
   if (!password)
     throw new BadRequestException('Password is required.');
 
@@ -11,7 +11,7 @@ export async function generateHashPassword(password: string) {
   return hashedPassword;
 }
 
-export async function compareHashPassword(password: string, hashedPassword: string) {
+export async function compareHashPassword ( password: string, hashedPassword: string ): Promise<boolean> {
   if (!password)
     throw new BadRequestException('Password is required.');
   if (!hashedPassword)
